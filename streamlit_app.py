@@ -14,11 +14,14 @@ name_on_order = st.text_input("Name on Smoothie: ")
 st.write("The name on your Smoothie will be ", name_on_order)
 
 try:
-    session = Session.builder.getOrCreate()
-    st.success(f"Connected as user: {session.get_current_user()}")
+    # This function specifically looks for the Snowflake-injected session
+    session = get_active_session()
+    st.success(f"Connected as: {session.get_current_user()}")
 except Exception as e:
-    st.error(f"Connection failed: {e}")
-    st.stop()
+    st.error(f"Failed to get active session: {e}")
+    st.info("Ensure you are launching this app from the Snowflake Snowsight UI, not directly via the URL.")
+    st.stop()()
+  
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
