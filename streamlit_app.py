@@ -1,6 +1,6 @@
 # Import python packages
 import streamlit as st
-from st_snowauth import snowauth_session
+from snowflake.snowpark import Session
 from snowflake.snowpark.functions import col
 
 # Write directly to the app
@@ -13,8 +13,12 @@ st.write(
 name_on_order = st.text_input("Name on Smoothie: ")
 st.write("The name on your Smoothie will be ", name_on_order)
 
-cnx = st.connection("snowflake")
-session = snowauth_session(label="Login with Snowflake") 
+try:
+    session = Session.builder.getOrCreate()
+    st.success(f"Connected as user: {session.get_current_user()}")
+except Exception as e:
+    st.error(f"Connection failed: {e}")
+    st.stop()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
