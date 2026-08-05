@@ -13,7 +13,6 @@ dependencies = [
 
 [tool.uv]
 constraint-dependencies = ["numba>=0.56.0"]
-exclude-newer = "7 days"
 
 [tool.uv.exclude-newer-package]
 streamlit = false
